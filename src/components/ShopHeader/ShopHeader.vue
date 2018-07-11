@@ -1,13 +1,14 @@
 <template>
   <div class="shop-header">
-    <nav class="shop-nav" :style="{backgroundImage: `url(${info.bgImg})`}">
+    <nav class="shop-nav"
+         :style="{backgroundImage: `url(${info.bgImg})`}">
       <a class="back" @click="$router.back()">
-        <i class="iconfont icon-arrow_left"></i>
+        <i class="iconfont icon-arrow_left"/>
       </a>
     </nav>
 
     <div class="shop-content" @click="isShowDetail = true">
-      <img class="content-image" :src="info.avatar">
+      <img :src="info.avatar" class="content-image">
       <div class="header-content">
         <h2 class="content-title">
           <span class="content-tag">
@@ -29,13 +30,13 @@
       </div>
     </div>
 
-    <div class="shop-header-discounts" @click="isShowSupport = true" v-if="info.supports">
+    <div class="shop-header-discounts" v-if="info.supports" @click="isShowSupport = true">
       <div class="discounts-left">
         <div class="activity" :class="supportClasses[info.supports[0].type]">
-            <span class="content-tag">
-              <span class="mini-tag">{{info.supports[0].name}}</span>
-            </span>
-          <span class="activity-content">{{info.supports[0].content}}</span>
+          <span class="content-tag">
+            <span class="mini-tag">{{info.supports[0].name}}</span>
+          </span>
+          <span class="activity-content ellipsis">{{info.supports[0].content}}</span>
         </div>
       </div>
       <div class="discounts-right">
@@ -47,9 +48,9 @@
       <div class="shop-brief-modal" v-if="isShowDetail">
         <div class="brief-modal-content">
           <h2 class="content-title">
-            <span class="content-tag">
-              <span class="mini-tag">品牌</span>
-            </span>
+          <span class="content-tag">
+            <span class="mini-tag">品牌</span>
+          </span>
             <span class="content-name">{{info.name}}</span>
           </h2>
           <ul class="brief-modal-msg">
@@ -75,48 +76,47 @@
             </li>
           </ul>
           <h3 class="brief-modal-title">
-            <span>公告</span>
-          </h3>
+            <span>公告</span></h3>
           <div class="brief-modal-notice">
             {{info.bulletin}}
           </div>
-          <div class="mask-footer" @click="shopShow">
+          <div class="mask-footer" @click="isShowDetail = false">
             <span class="iconfont icon-close"></span>
           </div>
         </div>
-        <div class="brief-modal-cover"></div>
+        <div class="brief-modal-cover" @click="isShowDetail = false"></div>
       </div>
     </transition>
 
-    <transition name="move">
-      <div class="activity-sheet" v-if="isShowSupport">
-        <div class="activity-sheet-content">
-          <h2 class="activity-sheet-title">优惠活动</h2>
-          <ul class="list">
-            <li class="activity-item" v-for="(support, index) in info.supports"
-                :key="index" :class="supportClasses[support.type]">
-              <span class="content-tag">
-                <span class="mini-tag">{{support.name}}</span>
-              </span>
-              <span class="activity-content">{{support.content}}</span>
-            </li>
-          </ul>
-          <div class="activity-sheet-close" @click="activityShow">
-            <span class="iconfont icon-close"></span>
-          </div>
+
+    <div class="activity-sheet" v-if="isShowSupport">
+      <div class="activity-sheet-content">
+        <h2 class="activity-sheet-title">
+          优惠活动</h2>
+        <ul class="list">
+          <li class="activity-item" v-for="(support, index) in info.supports" :key="index"
+              :class="supportClasses[support.type]">
+            <span class="content-tag">
+              <span class="mini-tag">{{support.name}}</span>
+            </span>
+            <span class="activity-content">{{support.content}}</span>
+          </li>
+
+        </ul>
+        <div class="activity-sheet-close" @click="isShowSupport = false">
+          <span class="iconfont icon-close"></span>
         </div>
-        <div class="activity-sheet-cover"></div>
       </div>
-    </transition>
+      <div class="activity-sheet-cover"></div>
+    </div>
   </div>
 </template>
 
 
 <script>
   import {mapState} from 'vuex'
-
   export default {
-    data() {
+    data () {
       return {
         supportClasses: ['activity-green', 'activity-red', 'activity-orange'],
         isShowDetail: false,
@@ -131,7 +131,6 @@
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   @import "../../common/stylus/mixins.styl"
-
   .shop-header
     height 100%
     position relative
@@ -141,7 +140,7 @@
     .shop-nav
       background-size cover
       background-repeat no-repeat
-      height 70px
+      height 40px
       padding 5px 10px
       position relative
       &::before
@@ -163,7 +162,7 @@
           color: #fff
 
     .shop-content
-      padding 35px 20px 0
+      padding 20px 10px 0
       position relative
       display flex
       background #fff
@@ -258,7 +257,7 @@
       padding 5px 7px
       font-size 11px
       color #666
-      margin 0 30px 20px 30px
+      margin 0 30px 10px 30px
       align-items center
       .discounts-left
         flex 1
@@ -269,7 +268,7 @@
           .content-tag
             border-radius 1px
             width 25px
-            height 13px
+            height 15px
             margin-right 5px
             color #fff
             font-style normal
@@ -319,13 +318,17 @@
       z-index 52
       flex-direction column
       color #333
+      &.fade-enter-active, &.fade-leave-active
+        transition opacity .5s
+      &.fade-enter, &.fade-leave-to
+        opacity 0
       .brief-modal-cover
         position absolute
         width 100%
         height 100%
         top 0
         left 0
-        background-color rgba(0, 0, 0, .5)
+        background-color rgba(0,0,0,.5)
         z-index 1
 
       .brief-modal-content
@@ -346,7 +349,7 @@
           display flex
           align-items center
           justify-content center
-          > span
+          >span
             font-weight 600
           .content-tag
             border-radius 2px
@@ -372,15 +375,15 @@
         .brief-modal-msg
           display flex
           margin 20px -10px 0
-          > li
+          >li
             flex 1
             text-align center
-            > h3
+            >h3
               font-size 15px
               font-weight 600
               color #333
               margin-bottom 8px
-            > p
+            >p
               font-size 12px
               color #999
         .brief-modal-title
@@ -388,11 +391,11 @@
           text-align center
           margin 15px auto 15px
           width 85px
-          background-image linear-gradient(90deg, #fff, #333 50%, #fff)
+          background-image linear-gradient(90deg,#fff,#333 50%,#fff)
           background-size 100% 1px
           background-position 50%
           background-repeat no-repeat
-          > span
+          >span
             font-size 12px
             padding 0 6px
             color #999
@@ -408,12 +411,12 @@
           bottom -60px
           left 50%
           padding 6px
-          border 1px solid rgba(255, 255, 255, .7)
+          border 1px solid rgba(255,255,255,.7)
           border-radius 50%
           transform translateX(-50%)
           span
             font-size 16px
-            color rgba(255, 255, 255, .7)
+            color rgba(255,255,255,.7)
     .activity-sheet
       position fixed
       top 0
@@ -500,5 +503,3 @@
         background-color rgba(0, 0, 0, .5)
 
 </style>
-
-
