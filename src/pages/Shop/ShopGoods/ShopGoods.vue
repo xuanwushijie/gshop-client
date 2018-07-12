@@ -39,7 +39,7 @@
                     <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -54,21 +54,22 @@
 <script>
   import BScroll from 'better-scroll'
   import {mapState} from 'vuex'
+  import CartControl from '../../../components/CartControl/CartControl.vue'
+
   export default {
-    data () {
+    data() {
       return {
         scrollY: 0, // 滚动的y轴坐标
         tops: [], // 所有li的top组成的数组
       }
     },
-    mounted () {
+    mounted() {
       this.$store.dispatch('getShopGoods', () => {
         this.$nextTick(() => {
           this._initScroll()
           this._intTops()
         })
       })
-
     },
 
     methods: {
@@ -92,7 +93,7 @@
         })
       },
 
-      _intTops () {
+      _intTops() {
         const tops = []
         // 遍历所有li, 累加高度生成top, 并保存到tops中
         const lis = this.$refs.foodsUl.getElementsByClassName('food-list-hook')
@@ -107,7 +108,7 @@
         this.tops = tops
       },
 
-      clickItem (index) {
+      clickItem(index) {
         // 得到对应的y
         const y = -this.tops[index]
         // 立即更新scrollY---> 更新当前分类
@@ -120,14 +121,17 @@
     computed: {
       ...mapState(['goods']),
 
-      currentIndex () {
+      currentIndex() {
         const {scrollY, tops} = this
         return tops.findIndex((top, index) => {
           // 0, 3, 7, 10, 16
           // 8   [top, nextTop)
-          return scrollY>=top && scrollY<tops[index+1]
+          return scrollY >= top && scrollY < tops[index + 1]
         })
       }
+    },
+    components: {
+      CartControl
     }
   }
 </script>
