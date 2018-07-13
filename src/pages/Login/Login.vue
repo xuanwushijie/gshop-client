@@ -13,8 +13,9 @@
           <div :class="{on: loginWay}">
             <section class="login_message">
               <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
+
               <button class="get_verification" :class="{right_phone_number: isRightPhone}" @click.prevent="sendCode">
-                {{computeTime > 0 ? `已发送(${computeTime})s` : '获取验证码'}}
+                {{computeTime>0 ? `已发送送(${computeTime}s)` : '获取验证码'}}
               </button>
             </section>
             <section class="login_verification">
@@ -32,7 +33,7 @@
               </section>
               <section class="login_verification">
                 <input :type="isHide ? 'password' : 'text'" maxlength="8" placeholder="密码" v-model="pwd">
-                <div class="switch_button " :class="isHide ? 'off' : 'on'" @click="isHide=!isHide">
+                <div class="switch_button" :class="isHide ? 'off' : 'on'" @click="isHide = !isHide">
                   <div class="switch_circle" :class="{right: !isHide}"></div>
                   <span class="switch_text">{{isHide ? '' : 'abc'}}</span>
                 </div>
@@ -61,41 +62,47 @@
   import AlertTip from '../../components/AlertTip/AlertTip.vue'
 
   export default {
-    data() {
+    data () {
       return {
-        loginWay: true, //true:　短信 false: 密码
-        phone: '',//手机号
-        code: '', //短信验证码
-        name: '', //用户名
-        pwd: '', //密码
+        loginWay: true, // true: 短信, false: 密码
+        phone: '', // 手机号
+        code: '', // 短信验证码
+        name: '', // 用户名
+        pwd: '', // 密码
         captcha: '', // 图形验证码
-        computeTime: 0,//倒计时剩余时间
-        isHide: true,//是否隐藏密码
-        alertText: '',//警告提示文本
-        isShowAlert: false,//是否显示警告框
+        computeTime: 0, // 倒计时剩余的时间
+        isHide: true, // 是否隐藏密码
+        alertText: '', // 警告的提示文本
+        isShowAlert: false, // 是否显示警告框
       }
     },
+
     computed: {
-      isRightPhone() {
+      isRightPhone () {
+        // console.log('isRightPhone()', /^1\\d{10}$/.test(this.phone))
         return /^1\d{10}$/.test(this.phone)
       }
     },
+
     methods: {
-      //发送验证码
-      async sendCode() {
-        if (this.isRightPhone && this.computeTime === 0) {
+      // 发送验证码
+      async sendCode () {
+        // 如果是正确的手机号并且没有计时, 才开始倒计时
+        if(this.isRightPhone && this.computeTime===0) {
           this.computeTime = 30
-          //启动循环定时器
+          // 启动循环定时器
           const intervalId = setInterval(() => {
             this.computeTime--
-            if (this.computeTime <= 0) {
+            if(this.computeTime<=0) {
+              // 清除定时器
               clearInterval(intervalId)
               this.computeTime = 0
             }
           }, 1000)
-          //发送ajax请求发送验证码短信
+
+          // 发送ajax请求发送验证码短信
           const result = await reqSendCode(this.phone)
-          if (result.code === 1) {
+          if(result.code===1) {
             this.showTip(result.msg)
             //停止计时
             this.computeTime = 0
@@ -104,55 +111,54 @@
           }
         }
       },
-      //关闭警告框
-      closeTip() {
-        console.log(1111111)
+      // 关闭警告框
+      closeTip () {
         this.isShowAlert = false
         this.alertText = ''
       },
       //显示提示
-
-      showTip(text) {
+      showTip (text) {
         this.isShowAlert = true
         this.alertText = text
       },
-      //请求登录
-      async login() {
+      // 请求登陆
+      async login () {
         let result
-        //先进行前台表单验证
-        if (this.loginWay) {//短信登录
+        // 先进行前台表单验证
+        if(this.loginWay) { // 短信登陆
           const {phone, code, isRightPhone} = this
-          if (!isRightPhone) {
-            this.showTip('请输入正确的手机号')
+          if(!isRightPhone) {
+            this.showTip('请输入正确手机号')
             return
-          } else if (!/^\d{6}/.test(code)) {
+          } else if(!/^\d{6}/.test(code)) {
             this.showTip('请输入正确验证码')
             return
           }
-          //发请求
+          // 发请求
           result = await reqSmsLogin(phone, code)
         } else {
           const {name, pwd, captcha} = this
-          if (!name) {
+          if(!name) { // 用户名
             this.showTip('请输入用户名')
             return
-          } else if (!pwd) {
+          } else if(!pwd) { // 密码
             this.showTip('请输入密码')
             return
-          } else if (!captcha) {
+          } else if(!captcha) { // 图片验证码
             this.showTip('请输入验证码')
             return
           }
-          //发请求
+          // 发请求
           result = await reqPwdLogin(name, pwd, captcha)
+
           // 如果密码登陆失败, 更新显示图形验证码
-          if (result.code === 1) {
+          if(result.code===1) {
             this.changeCaptcha()
           }
         }
 
         // 根据结果数据进行处理
-        if (result.code === 1) {
+        if(result.code===1) {
           this.showTip(result.msg)
         } else { // 登陆成功
           const user = result.data
@@ -160,24 +166,20 @@
           this.$store.dispatch('saveUser', user)
           // 回到个人中心界面
           this.$router.replace('/profile')
-
         }
+
       },
 
-      changeCaptcha() {
+      changeCaptcha () {
         // 必须指定一个不同的src
-        this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
-      },
-
-    }
-    ,
+        this.$refs.captcha.src = 'http://localhost:4000/captcha?time='+Date.now()
+      }
+    },
 
     components: {
       AlertTip
     }
   }
-
-
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -198,7 +200,7 @@
         .login_header_title
           padding-top 40px
           text-align center
-          > a
+          >a
             color #333
             font-size 14px
             padding-bottom 4px
@@ -209,8 +211,8 @@
               font-weight 700
               border-bottom 2px solid #02a774
       .login_content
-        > form
-          > div
+        >form
+          >div
             display none
             &.on
               display block
@@ -253,7 +255,7 @@
                 font-size 12px
                 border 1px solid #ddd
                 border-radius 8px
-                transition background-color .3s, border-color .3s
+                transition background-color .3s,border-color .3s
                 padding 0 6px
                 width 30px
                 height 16px
@@ -270,8 +272,7 @@
                     color #ddd
                 &.on
                   background #02a774
-                > .switch_circle
-                //transform translateX(27px)
+                >.switch_circle
                   position absolute
                   top -1px
                   left -1px
@@ -280,7 +281,7 @@
                   border 1px solid #ddd
                   border-radius 50%
                   background #fff
-                  box-shadow 0 2px 4px 0 rgba(0, 0, 0, .1)
+                  box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                   transition transform .3s
                   &.right
                     transform translateX(27px)
@@ -289,7 +290,7 @@
               color #999
               font-size 14px
               line-height 20px
-              > a
+              >a
                 color #02a774
           .login_submit
             display block
@@ -315,7 +316,7 @@
         left 5px
         width 30px
         height 30px
-        > .iconfont
+        >.iconfont
           font-size 20px
           color #999
 </style>

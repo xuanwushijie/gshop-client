@@ -11,9 +11,9 @@
         <div class="user-info">
           <p class="user-info-top">{{user.name ? user.name : user.phone ? '' : '登录/注册'}}</p>
           <p>
-                <span class="user-icon">
-                  <i class="iconfont icon-shouji icon-mobile"></i>
-                </span>
+            <span class="user-icon">
+              <i class="iconfont icon-shouji icon-mobile"></i>
+            </span>
             <span class="icon-mobile-number">{{user.phone ? user.phone : '暂无绑定手机号'}}</span>
           </p>
         </div>
@@ -91,9 +91,12 @@
         </div>
       </a>
     </section>
+
+
     <section class="profile_my_order border-1px">
       <mt-button style="width: 100%" type="danger" v-show="user._id" @click="logout">退出登陆</mt-button>
     </section>
+
   </section>
 </template>
 
@@ -101,7 +104,7 @@
   import {MessageBox} from 'mint-ui'
   import {mapState} from 'vuex'
   import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
-  import MtButton from '../../../node_modules/mint-ui/packages/button/src/button.vue'
+  import MtButton from "../../../node_modules/mint-ui/packages/button/src/button.vue";
   export default {
     computed: {
       ...mapState(['user'])

@@ -8,6 +8,7 @@
     <div class="iconfont icon-add_circle" @click.stop="updateFoodCount(true)"></div>
   </div>
 </template>
+
 <script>
   export default {
     props: {
@@ -16,11 +17,13 @@
 
     methods: {
       updateFoodCount (isAdd) {
+        console.log('updateFoodCount()')
         this.$store.dispatch('updateFoodCount', {isAdd, food: this.food})
       }
     }
   }
 </script>
+
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl"
   .cartcontrol
@@ -59,5 +62,3 @@
       font-size: 24px
       color $green
 </style>
-
-

@@ -1,7 +1,7 @@
 <template>
   <section class="msite">
     <!--首页头部-->
-    <HeaderTop title="address.name">
+    <HeaderTop :title="address.name">
       <span class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
       </span>
@@ -16,11 +16,11 @@
         <div class="swiper-wrapper">
           <div class="swiper-slide" v-for="(categorys, index) in categorysArr" :key="index">
             <a href="javascript:" class="link_to_food" v-for="(c, index) in categorys" :key="index">
-            <div class="food_container">
-              <img :src="imgBaseUrl+ c.image_url">
-            </div>
-            <span>{{c.title}}</span>
-          </a>
+              <div class="food_container">
+                <img :src="imgBaseUrl+ c.image_url">
+              </div>
+              <span>{{c.title}}</span>
+            </a>
           </div>
         </div>
         <!-- Add Pagination -->
@@ -47,15 +47,18 @@
   import ShopList from '../../components/ShopList/ShopList.vue'
 
   export default {
+
     data () {
       return {
         imgBaseUrl: 'https://fuss10.elemecdn.com'
       }
     },
+
     mounted () {
       this.$store.dispatch('getCategorys')
       this.$store.dispatch('getShops')
-  },
+    },
+
     computed: {
       ...mapState(['address', 'categorys']),
 
@@ -64,15 +67,17 @@
         const arr = []
         let smallArr = []
         categorys.forEach(c => {
-          //将全新的数组保存到大数组中
-          if(smallArr.length===0){
-              arr.push(smallArr)
+          // 将全新的小数组保存到大数组中
+          if(smallArr.length===0) {
+            arr.push(smallArr)
           }
-          //将当前分类保存到小数组中
+
+          // 将当前分类保存到小数组
           smallArr.push(c)
-          //如果刚好满了，为后面创建一个新的小数组
-          if(smallArr.length===8){
-              smallArr = []
+
+          // 如果刚好满了, 为后面创建一个新的小数组
+          if(smallArr.length===8) {
+            smallArr = []
           }
         })
         return arr
@@ -101,7 +106,6 @@
         })
       }
     },
-
     components: {
       HeaderTop,
       ShopList

@@ -15,7 +15,7 @@
             </section>
             <section class="shop_rating_order">
               <section class="shop_rating_order_left">
-                <Star :size="24" :score="shop.rating" />
+                <Star :size="24" :score="shop.rating"/>
                 <div class="rating_section">
                   {{shop.rating}}
                 </div>
@@ -49,6 +49,7 @@
 <script>
   import {mapState} from 'vuex'
   import Star from '../Star/Star.vue'
+
   export default {
     data () {
       return {
@@ -58,6 +59,7 @@
     computed: {
       ...mapState(['shops'])
     },
+
     components: {
       Star
     }

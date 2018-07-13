@@ -16,7 +16,6 @@
     props: ['alertText'],
     methods: {
       closeTip() {
-        console.log(222222)
         this.$emit('closeTip')
       }
     }

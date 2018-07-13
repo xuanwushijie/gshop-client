@@ -3,7 +3,7 @@
     <div class="food" v-if="isShow">
       <div class="food-content">
         <div class="image-header">
-          <img :src="food.image">
+          <img v-lazy="food.image">
           <p class="foodpanel-desc">{{food.info}}</p>
           <div class="back" @click="toggleShow">
             <i class="iconfont icon-arrow_left"></i>
@@ -17,7 +17,7 @@
           </div>
           <div class="price">
             <span class="now">￥{{food.price}}</span>
-            <span class="old"  v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+            <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
           </div>
           <div class="cartcontrol-wrapper">
             <CartControl :food="food"/>
@@ -29,28 +29,32 @@
   </transition>
 </template>
 
-
 <script>
   import CartControl from '../CartControl/CartControl.vue'
+
   export default {
     props: {
       food: Object
     },
+
     data () {
       return {
         isShow: false
       }
     },
+
     methods: {
       toggleShow () {
         this.isShow = !this.isShow
       }
     },
+
     components: {
       CartControl
     }
   }
 </script>
+
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   @import "../../common/stylus/mixins.styl"
 
@@ -166,4 +170,3 @@
       background-color rgba(0, 0, 0, 0.5)
 
 </style>
-

@@ -3,6 +3,7 @@
     <span class="star-item" v-for="(sc, index) in starClasses" :class="sc" :key="index"></span>
   </div>
 </template>
+
 <script>
   const CLASS_ON = 'on'
   const CLASS_HALF = 'half'
@@ -38,8 +39,10 @@
     }
   }
 </script>
+
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl"
+
   .star //2x图 3x图
     float left
     font-size 0

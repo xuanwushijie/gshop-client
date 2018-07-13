@@ -4,16 +4,16 @@
       <div class="content">
         <div class="content-left" @click="toggleShow">
           <div class="logo-wrapper">
-            <div class="logo " :class="{highlight: totalCount}">
-              <i class="iconfont icon-shopping_cart " :class="{highlight: totalCount}"></i>
+            <div class="logo" :class="{highlight: totalCount}">
+              <i class="iconfont icon-shopping_cart" :class="{highlight: totalCount}"></i>
             </div>
             <div class="num" v-if="totalCount">{{totalCount}}</div>
           </div>
-          <div class="price " :class="{highlight: totalCount}">￥{{totalPrice}}</div>
+          <div class="price" :class="{highlight: totalCount}">￥{{totalPrice}}</div>
           <div class="desc">另需配送费￥{{info.deliveryPrice}}元</div>
         </div>
         <div class="content-right">
-          <div class="pay " :class="payClass">
+          <div class="pay" :class="payClass">
             {{payText}}
           </div>
         </div>
@@ -38,54 +38,59 @@
     </div>
     <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
   </div>
-
 </template>
+
 <script>
   import {MessageBox} from 'mint-ui'
   import BScroll from 'better-scroll'
   import {mapState, mapGetters} from 'vuex'
   import CartControl from '../CartControl/CartControl.vue'
+
   export default {
     data () {
       return {
-        inShow: false
+        isShow: false
       }
     },
     computed: {
       ...mapState(['cartFoods', 'info']),
-        ...mapGetters(['totalCount', 'totalPrice']),
+      ...mapGetters(['totalCount', 'totalPrice']),
 
       payText () {
-        const {minPrice} = this.info
-        const {totalPrice} = this
-        if(totalPrice===0){
-            return `￥${minPrice}元起送`
-        } else if(minPrice>totalPrice){
+        const minPrice = this.info.minPrice
+        const totalPrice = this.totalPrice
+        if(totalPrice===0) {
+          return `￥${minPrice}元起送`
+        } else if (minPrice>totalPrice) {
           return `还差￥${minPrice-totalPrice}元起送`
         } else {
           return '去结算'
-        }
+      }
       },
+
       payClass () {
-        const {minPrice} = this.info
-        const {totalPrice} = this
-        if(minPrice>totalPrice){
-            return 'not-enough'
+        // not-enough enough
+        const minPrice = this.info.minPrice
+        const totalPrice = this.totalPrice
+        if(minPrice>totalPrice) {
+          return 'not-enough'
         } else {
-            return 'enough'
+          return 'enough'
         }
       },
+
       listShow () {
         // 如果总数量为0, 直接返回false
         if(this.totalCount===0) {
           this.isShow = false
           return false
         }
+
         /*
-                如何实现单例对象?
-                  1. 在创建前, 判断是否已经存在, 只有不存在才创建
-                  2. 在创建后, 保存创建的对象
-                 */
+        如何实现单例对象?
+          1. 在创建前, 判断是否已经存在, 只有不存在才创建
+          2. 在创建后, 保存创建的对象
+         */
         if(this.isShow) {
           this.$nextTick(function () {
             if(!this.scroll) {
@@ -103,13 +108,15 @@
         return this.isShow
       }
     },
+
     methods: {
       toggleShow () {
-        //只有有数量才去更新
-        if(this.totalCount){
-            this.isShow = !this.isShow
+        // 只有有数量才去更新
+        if(this.totalCount) {
+          this.isShow = !this.isShow
         }
       },
+
       clear () {
         MessageBox.confirm('确定清空吗?').then(action => {// 确认
           this.$store.dispatch('clearCart')
@@ -122,6 +129,7 @@
     }
   }
 </script>
+
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   @import "../../common/stylus/mixins.styl"
   .shopcart
@@ -216,6 +224,7 @@
       top: 0
       z-index: -1
       width: 100%
+      transform translateY(-100%)
       .list-header
         height: 40px
         line-height: 40px
@@ -273,4 +282,3 @@
     &.fade-enter, &.fade-leave-to
       opacity: 0
 </style>
-

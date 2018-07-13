@@ -24,8 +24,8 @@
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index"
-              @click="showFood(food)">
+              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods"
+                  :key="index" @click="showFood(food)">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -61,32 +61,33 @@
   import ShopCart from '../../../components/ShopCart/ShopCart.vue'
   import Food from '../../../components/Food/Food.vue'
 
-
   export default {
-    data() {
+    data () {
       return {
         scrollY: 0, // 滚动的y轴坐标
         tops: [], // 所有li的top组成的数组
         food: {}, //当前选择的food
       }
     },
-    mounted() {
+    mounted () {
       this.$store.dispatch('getShopGoods', () => {
         this.$nextTick(() => {
           this._initScroll()
           this._intTops()
         })
       })
+
     },
+
     computed: {
       ...mapState(['goods']),
 
-      currentIndex() {
+      currentIndex () {
         const {scrollY, tops} = this
         return tops.findIndex((top, index) => {
           // 0, 3, 7, 10, 16
           // 8   [top, nextTop)
-          return scrollY >= top && scrollY < tops[index + 1]
+          return scrollY>=top && scrollY<tops[index+1]
         })
       }
     },
@@ -97,7 +98,7 @@
           click: true
         })
         this.foodsScroll = new BScroll('.foods-wrapper', {
-          probeType: 2 ,// 因为惯性滑动不会触发
+          probeType: 2, // 因为惯性滑动不会触发
           click: true
         })
         // 给右侧滚动对象绑定滚动的监听
@@ -113,7 +114,7 @@
         })
       },
 
-      _intTops() {
+      _intTops () {
         const tops = []
         // 遍历所有li, 累加高度生成top, 并保存到tops中
         const lis = this.$refs.foodsUl.getElementsByClassName('food-list-hook')
@@ -128,7 +129,7 @@
         this.tops = tops
       },
 
-      clickItem(index) {
+      clickItem (index) {
         // 得到对应的y
         const y = -this.tops[index]
         // 立即更新scrollY---> 更新当前分类
@@ -144,7 +145,6 @@
         this.$refs.food.toggleShow()
       }
     },
-
 
     components: {
       CartControl,

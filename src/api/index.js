@@ -12,6 +12,7 @@ export const reqFoodTypes = () => ajax('/api/index_category')
 export const reqShops = ({latitude, longitude}) => ajax('/api/shops', {latitude, longitude})
 // [4、根据经纬度和关键字搜索商铺列表](#4根据经纬度和关键字搜索商铺列表)<br/>
 export const reqSearchShops = (keyword, geohash) => ajax('/api/search_shops', {keyword, geohash})
+
 /**
  * 账号密码登录
  */
@@ -44,3 +45,5 @@ export const reqLogout = () => ajax('/api/logout')
 export const reqShopGoods = () => ajax('/goods')
 export const reqShopRatings = () => ajax('/ratings')
 export const reqShopInfo = () => ajax('/info')
+
+
