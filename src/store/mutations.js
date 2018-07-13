@@ -9,7 +9,8 @@ import {
   RECEIVE_RATINGS,
   RECEIVE_GOODS,
   INCREMENT_FOOD_COUNT,
-  DECREMENT_FOOD_COUNT
+  DECREMENT_FOOD_COUNT,
+  CLEAR_CART
 } from "./mutation-types";
 
 export default {
@@ -25,37 +26,43 @@ export default {
   [RECEIVE_USER](state, {user}) {
     state.user = user
   },
-  [RESET_USER] (state) {
+  [RESET_USER](state) {
     state.user = {}
   },
 
-  [RECEIVE_GOODS] (state, {goods}) {
+  [RECEIVE_GOODS](state, {goods}) {
     state.goods = goods
   },
-  [RECEIVE_RATINGS] (state, {ratings}) {
+  [RECEIVE_RATINGS](state, {ratings}) {
     state.ratings = ratings
   },
-  [RECEIVE_INFO] (state, {info}) {
+  [RECEIVE_INFO](state, {info}) {
     state.info = info
   },
-  [INCREMENT_FOOD_COUNT] (state, {food}) {
-    if(!food.count) { // 第一次点+
+  [INCREMENT_FOOD_COUNT](state, {food}) {
+    if (!food.count) { // 第一次点+
       // 给food添加一个新的属性(没有数据绑定)
       // food.count = 1
-      Vue.set( food, 'count', 1 ) // 新添加的属性就有数据绑定
+      Vue.set(food, 'count', 1) // 新添加的属性就有数据绑定
       // 将一个新的food添加到购物车
       state.cartFoods.push(food)
     } else {
       food.count++
     }
   },
-  [DECREMENT_FOOD_COUNT] (state, {food}) {
-    if(food.count) {// 只有有count时
+  [DECREMENT_FOOD_COUNT](state, {food}) {
+    if (food.count) {// 只有有count时
       food.count--
-      if(food.count===0) {
+      if (food.count === 0) {
         // 从购物车中移除
         state.cartFoods.splice(state.cartFoods.indexOf(food), 1)
       }
     }
+  },
+  [CLEAR_CART] (state) {
+    // 所有food的cout置为0
+    state.cartFoods.forEach(food => food.count = 0)
+    // 重置购物车food数组
+    state.cartFoods = []
   },
 }
